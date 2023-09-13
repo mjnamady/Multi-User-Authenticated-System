@@ -6,7 +6,7 @@
 
     <nav class="page-breadcrumb">
         <ol class="breadcrumb">
-            <a href=" {{route('add.role')}} " class="btn btn-inverse-success">Add Admin</a>
+            <a href=" {{route('add.admin')}} " class="btn btn-inverse-success">Add Admin</a>
         </ol>
     </nav>
 
