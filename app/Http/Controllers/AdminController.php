@@ -116,4 +116,80 @@ class AdminController extends Controller
         return view('backend.pages.admin.add_admin', compact('roles'));
     } // End method
 
+    public function StoreAdmin(Request $request){
+        $Admin = new User();
+
+        $Admin->name = $request->name;
+        $Admin->username = $request->uid;
+        $Admin->email = $request->email;
+        $Admin->phone = $request->phone;
+        $Admin->address = $request->address;
+        $Admin->role = "admin";
+        $Admin->status = "active";
+        $Admin->password = Hash::make($request->pwd);
+
+        $Admin->save();
+
+        if($request->roles){
+            $Admin->assignRole($request->roles);
+        }
+
+        $notification = array(
+            'message' => 'Admin Added Successfully!',
+            'alert-type' => 'success'
+        );
+
+        return redirect()->route('all.admin')->with($notification);
+
+    } // End method
+
+    public function EditAdmin($id){
+        $admin = User::findOrFail($id);
+        $roles = Role::all();
+        return view('backend.pages.admin.edit_admin', compact('admin', 'roles'));
+    } // End method
+
+    public function UpdateAdmin(Request $request, $id){
+        $admin = User::findOrFail($id);
+
+        $admin->name = $request->name;
+        $admin->username = $request->uid;
+        $admin->email = $request->email;
+        $admin->phone = $request->phone;
+        $admin->address = $request->address;
+        $admin->role = "admin";
+        $admin->status = "active";
+
+        $admin->save();
+
+        $admin->roles()->detach();
+        if($request->roles){
+            $admin->assignRole($request->roles);
+        }
+
+        $notification = array(
+            'message' => 'Admin User Updated Successfully!',
+            'alert-type' => 'success'
+        );
+
+        return redirect()->route('all.admin')->with($notification);
+    } // End method
+
+    public function DeleteAdmin($id){
+        $admin = User::findOrFail($id);
+
+        if(!is_null($admin))
+        {
+            $admin->delete();
+        }
+        
+        $notification = array(
+            'message' => 'Admin User Deleted Successfully!',
+            'alert-type' => 'success'
+        );
+
+        return redirect()->back()->with($notification);
+
+    } // End method
+
 }
